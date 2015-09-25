@@ -186,7 +186,7 @@ class MVSubjects(MetadataValue):
 
     def update_xml(self, doc):
         elements = doc.getElementsByTagName('subjects')
-        assert len(elements) == 0
+        assert len(elements) == 1
         subjects_el = elements[0]
         for (subject, scheme, uri) in self.value:
             el = doc.createElement('subjet')
@@ -201,7 +201,7 @@ class MVSubjects(MetadataValue):
     def extract_from_xml(cls, doc):
         value = []
         elements = doc.getElementsByTagName('subjects')
-        assert len(elements) == 0
+        assert len(elements) == 1
         for el in elements[0].getElementsByTagName('subject'):
             subject = xml_text(el)
             if el.hasAttribute('subjectScheme'):
@@ -401,7 +401,7 @@ class MVAlternateIdentifiers(MetadataValue):
         for (type, identifier) in self.value:
             el = doc.createElement('alternateIdentifier')
             el.setAttribute('alternateIdentifierType', type)
-            el.appendChild(doc.creatTextNode(identifier))
+            el.appendChild(doc.createTextNode(identifier))
             ai_el.appendChild(el)
         return
 

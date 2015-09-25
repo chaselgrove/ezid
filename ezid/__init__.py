@@ -141,7 +141,7 @@ def mint(landing_page, metadata, doi_prefix, auth):
     body = _create_request_body(landing_page, None, metadata)
     r = requests.post(url, auth=auth, headers=headers, data=body)
     if r.content.startswith('error:'):
-        raise RquestError(r.content[6:].strip())
+        raise RequestError(r.content[6:].strip())
     if not r.content.startswith('success:'):
         raise MintError('bad content returned from EZID')
     for part in r.content[8:].strip().split('|'):
