@@ -161,7 +161,8 @@ def create_datacite_xml(identifier, metadata):
     else:
         xml_add_text(doc, 'identifier', 'doi:%s' % identifier)
     for (key, cls) in metadata_values.iteritems():
-        cls(metadata[key]).update_xml(doc)
+        if key in metadata:
+            cls(metadata[key]).update_xml(doc)
     return doc.toxml()
 
 def xml_to_metadata(data):
