@@ -172,7 +172,7 @@ class MVSubjects(MetadataValue):
                 self.value.append((v, None, None))
             elif isinstance(v, (tuple, list)):
                 for part in v:
-                    if not isinstance(v, basestring):
+                    if not isinstance(part, basestring):
                         raise ValueError(seq_err)
                 if len(v) == 2:
                     self.value.append((v[0], v[1], None))
@@ -511,7 +511,7 @@ class MVRights(MetadataValue):
                 self.value.append((v, None))
             elif isinstance(v, (tuple, list)):
                 for part in v:
-                    if not isinstance(v, basestring):
+                    if not isinstance(part, basestring):
                         raise ValueError(seq_err)
                 if len(v) != 2:
                     raise ValueError(seq_err)
