@@ -89,18 +89,18 @@ class DOI:
         return copy.deepcopy(self.metadata)
 
     def update_metadata(self, metadata, auth):
-        validate_metadata(metadata)
+        md2 = validate_metadata(metadata)
         url = '%s/id/doi:%s' % (base_url, self.identifier)
         headers = {'Content-Type': 'text/plain'}
         body = _create_request_body(self.landing_page, 
                                     self.identifier, 
-                                    metadata)
+                                    md2)
         r = requests.post(url, auth=auth, headers=headers, data=body)
         if r.content.startswith('error:'):
             raise RequestError(r.content[6:].strip())
         if not r.content.startswith('success:'):
             raise UpdateError('bad content returned from EZID')
-        self.metadata = metadata
+        self.metadata = md2
         return
 
     def update_landing_page(self, landing_page, auth):
@@ -124,21 +124,22 @@ class DOI:
 def validate_metadata(metadata):
     if not isinstance(metadata, dict):
         raise TypeError('metadata must be a dictionary')
+    md2 = {}
     for (k, v) in metadata.iteritems():
         if k not in metadata_values:
             raise ValueError('unknown metadata key "%s"' % k)
-        metadata_values[k](v)
+        md2[k] = metadata_values[k](v).value
     for (key, cls) in metadata_values.iteritems():
         if cls.mandatory and key not in metadata:
             raise ValueError('missing mandatory metadata key "%s"' % key)
-    return
+    return md2
 
 def mint(landing_page, metadata, doi_prefix, auth):
-    validate_metadata(metadata)
+    md2 = validate_metadata(metadata)
     assert doi_prefix == test_prefix
     url = '%s/shoulder/doi:%s' % (base_url, doi_prefix)
     headers = {'Content-Type': 'text/plain'}
-    body = _create_request_body(landing_page, None, metadata)
+    body = _create_request_body(landing_page, None, md2)
     r = requests.post(url, auth=auth, headers=headers, data=body)
     if r.content.startswith('error:'):
         raise RequestError(r.content[6:].strip())

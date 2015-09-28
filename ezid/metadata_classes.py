@@ -1,3 +1,4 @@
+import types
 import re
 from .controlled_values import *
 from .xml_utils import xml_text, xml_add_text
@@ -84,9 +85,10 @@ class MVCreators(MetadataValue):
             elif isinstance(v, (tuple, list)):
                 if len(v) != 2:
                     raise ValueError(seq_err)
-                for part in v:
-                    if not isinstance(part, basestring):
-                        raise ValueError(seq_err)
+                if not isinstance(v[0], basestring):
+                    raise ValueError(seq_err)
+                if not isinstance(v[1], (types.NoneType, basestring)):
+                    raise ValueError(seq_err)
                 self.value.append(tuple(v))
             else:
                 raise ValueError(seq_err)
@@ -171,15 +173,23 @@ class MVSubjects(MetadataValue):
             if isinstance(v, basestring):
                 self.value.append((v, None, None))
             elif isinstance(v, (tuple, list)):
-                for part in v:
-                    if not isinstance(part, basestring):
-                        raise ValueError(seq_err)
                 if len(v) == 2:
-                    self.value.append((v[0], v[1], None))
+                    subject = v[0]
+                    scheme = v[1]
+                    uri = None
                 elif len(v) == 3:
-                    self.value.append(tuple(v))
+                    subject = v[0]
+                    scheme = v[1]
+                    uri = v[2]
                 else:
                     raise ValueError(seq_err)
+                if not isinstance(subject, basestring):
+                    raise ValueError(seq_err)
+                if not isinstance(scheme, basestring):
+                    raise ValueError(seq_err)
+                if not isinstance(uri, (types.NoneType, basestring)):
+                    raise ValueError(seq_err)
+                self.value.append((subject, scheme, uri))
             else:
                 raise ValueError(seq_err)
         return
@@ -230,19 +240,23 @@ class MVContributors(MetadataValue):
         for v in value:
             if not isinstance(v, (tuple, list)):
                 raise ValueError(seq_err)
-            for part in v:
-                if not isinstance(part, basestring):
-                    raise ValueError(seq_err)
             if len(v) == 2:
-                if v[0] not in contributortype_values:
-                    raise ValueError('bad value for contributortype')
-                self.value.append((v[0], v[1], None))
+                type = v[0]
+                name = v[1]
+                affiliation = None
             elif len(v) == 3:
-                if v[0] not in contributortype_values:
-                    raise ValueError('bad value for contributortype')
-                self.value.append(tuple(v))
+                type = v[0]
+                name = v[1]
+                affiliation = v[2]
             else:
                 raise ValueError(seq_err)
+            if not isinstance(type, basestring):
+                raise ValueError(seq_err)
+            if not isinstance(name, basestring):
+                raise ValueError(seq_err)
+            if not isinstance(affiliation, (types.NoneType, basestring)):
+                raise ValueError(seq_err)
+            self.value.append((type, name, affiliation))
         return
 
     def update_xml(self, doc):
