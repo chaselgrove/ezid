@@ -524,10 +524,11 @@ class MVRights(MetadataValue):
             if isinstance(v, basestring):
                 self.value.append((v, None))
             elif isinstance(v, (tuple, list)):
-                for part in v:
-                    if not isinstance(part, basestring):
-                        raise ValueError(seq_err)
                 if len(v) != 2:
+                    raise ValueError(seq_err)
+                if not isinstance(v[0], basestring):
+                    raise ValueError(seq_err)
+                if not isinstance(v[1], (types.NoneType, basestring)):
                     raise ValueError(seq_err)
                 self.value.append(tuple(v))
             else:
