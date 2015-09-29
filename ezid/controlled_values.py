@@ -1,3 +1,14 @@
+unknown_values = ('(:unac)', 
+                  '(:unal)', 
+                  '(:unap)', 
+                  '(:unas)', 
+                  '(:unav)', 
+                  '(:unkn)', 
+                  '(:none)', 
+                  '(:null)', 
+                  '(:tba)', 
+                  '(:etal)')
+
 contributortype_values = ('ContactPerson', 
                           'DataCollector', 
                           'DataCurator', 
