@@ -61,6 +61,26 @@ class DOI:
         self.load()
         return
 
+    def record_exists(self):
+        """returns False if the dx.doi.org record redirects to:
+
+            http://datacite.org/invalidDOI
+            http://www.datacite.org/testprefix
+
+        returns True otherwise
+        """
+        url = 'http://dx.doi.org/%s' % self.identifier
+        r = requests.get(url, allow_redirects=False)
+        if r.status_code != 303:
+            return True
+        if 'Location' not in r.headers:
+            return True
+        if r.headers['Location'] == 'http://datacite.org/invalidDOI':
+            return False
+        if r.headers['Location'] == 'http://www.datacite.org/testprefix':
+            return False
+        return True
+
     def load(self):
         url = '%s/id/doi:%s' % (base_url, self.identifier)
         r = requests.get(url)
