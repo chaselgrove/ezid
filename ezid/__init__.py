@@ -61,6 +61,10 @@ class DOI:
         self.load()
         return
 
+    @property
+    def is_test(self):
+        return self.identifier.startswith(test_prefix)
+
     def record_exists(self):
         """returns False if the dx.doi.org record redirects to:
 
