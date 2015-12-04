@@ -160,7 +160,6 @@ def validate_metadata(metadata):
 
 def mint(landing_page, metadata, doi_prefix, auth):
     md2 = validate_metadata(metadata)
-    assert doi_prefix == test_prefix
     url = '%s/shoulder/doi:%s' % (base_url, doi_prefix)
     headers = {'Content-Type': 'text/plain'}
     body = _create_request_body(landing_page, None, md2)
