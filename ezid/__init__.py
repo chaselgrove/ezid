@@ -149,11 +149,11 @@ def validate_metadata(metadata):
     if not isinstance(metadata, dict):
         raise TypeError('metadata must be a dictionary')
     md2 = {}
-    for (k, v) in metadata.iteritems():
+    for (k, v) in metadata.items():
         if k not in metadata_values:
             raise ValueError('unknown metadata key "%s"' % k)
         md2[k] = metadata_values[k](v).value
-    for (key, cls) in metadata_values.iteritems():
+    for (key, cls) in metadata_values.items():
         if cls.mandatory and key not in metadata:
             raise ValueError('missing mandatory metadata key "%s"' % key)
     return md2
@@ -184,7 +184,7 @@ def create_datacite_xml(identifier, metadata):
         xml_add_text(doc, 'identifier', '(:tba)')
     else:
         xml_add_text(doc, 'identifier', 'doi:%s' % identifier)
-    for (key, cls) in metadata_values.iteritems():
+    for (key, cls) in metadata_values.items():
         if key in metadata:
             cls(metadata[key]).update_xml(doc)
     return doc.toxml()
@@ -192,7 +192,7 @@ def create_datacite_xml(identifier, metadata):
 def xml_to_metadata(data):
     doc = xml.dom.minidom.parseString(data)
     metadata = {}
-    for (key, cls) in metadata_values.iteritems():
+    for (key, cls) in metadata_values.items():
         metadata[key] = cls.extract_from_xml(doc)
     return metadata
 

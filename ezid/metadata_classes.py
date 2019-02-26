@@ -1,4 +1,3 @@
-import types
 import re
 from .controlled_values import *
 from .xml_utils import xml_text, xml_add_text
@@ -15,8 +14,8 @@ class MetadataValue:
 class MVStringBase(MetadataValue):
 
     def __init__(self, value):
-        if not isinstance(value, basestring):
-            raise ValueError('value must be a basestring')
+        if not isinstance(value, str):
+            raise ValueError('value must be a string')
         self.value = value
         return
 
@@ -37,8 +36,8 @@ class MVStringListBase(MetadataValue):
             raise ValueError('value must be a tuple or list')
         self.value = []
         for v in value:
-            if not isinstance(v, basestring):
-                raise ValueError('value elements must be a basestrings')
+            if not isinstance(v, str):
+                raise ValueError('value elements must be a strings')
             self.value.append(v)
         return
 
@@ -78,16 +77,16 @@ class MVCreators(MetadataValue):
         if not isinstance(value, (tuple, list)):
             raise ValueError('creators must be a list or a tuple')
         self.value = []
-        seq_err = 'creators elements must be basestrings or 2-tuples'
+        seq_err = 'creators elements must be strings or 2-tuples'
         for v in value:
-            if isinstance(v, basestring):
+            if isinstance(v, str):
                 self.value.append((v, None))
             elif isinstance(v, (tuple, list)):
                 if len(v) != 2:
                     raise ValueError(seq_err)
-                if not isinstance(v[0], basestring):
+                if not isinstance(v[0], str):
                     raise ValueError(seq_err)
-                if not isinstance(v[1], (types.NoneType, basestring)):
+                if not isinstance(v[1], (type(None), str)):
                     raise ValueError(seq_err)
                 self.value.append(tuple(v))
             else:
@@ -142,8 +141,8 @@ class MVPublicationYear(MVStringBase):
     xml_tag = 'publicationYear'
 
     def __init__(self, value):
-        if not isinstance(value, basestring):
-            raise ValueError('publicationyear must be a basestring')
+        if not isinstance(value, str):
+            raise ValueError('publicationyear must be a string')
         if not re.search('^[0-9]{4}$', value):
             raise ValueError('publicationyear must be a four-digit number')
         self.value = value
@@ -170,7 +169,7 @@ class MVSubjects(MetadataValue):
         self.value = []
         seq_err = 'subjects elements must be strings or 2- or 3-tuples of strings'
         for v in value:
-            if isinstance(v, basestring):
+            if isinstance(v, str):
                 self.value.append((v, None, None))
             elif isinstance(v, (tuple, list)):
                 if len(v) == 2:
@@ -183,11 +182,11 @@ class MVSubjects(MetadataValue):
                     uri = v[2]
                 else:
                     raise ValueError(seq_err)
-                if not isinstance(subject, basestring):
+                if not isinstance(subject, str):
                     raise ValueError(seq_err)
-                if not isinstance(scheme, basestring):
+                if not isinstance(scheme, str):
                     raise ValueError(seq_err)
-                if not isinstance(uri, (types.NoneType, basestring)):
+                if not isinstance(uri, (type(None), str)):
                     raise ValueError(seq_err)
                 self.value.append((subject, scheme, uri))
             else:
@@ -250,11 +249,11 @@ class MVContributors(MetadataValue):
                 affiliation = v[2]
             else:
                 raise ValueError(seq_err)
-            if not isinstance(type, basestring):
+            if not isinstance(type, str):
                 raise ValueError(seq_err)
-            if not isinstance(name, basestring):
+            if not isinstance(name, str):
                 raise ValueError(seq_err)
-            if not isinstance(affiliation, (types.NoneType, basestring)):
+            if affiliation is not None and not isinstance(affiliation, str):
                 raise ValueError(seq_err)
             self.value.append((type, name, affiliation))
         return
@@ -313,7 +312,7 @@ class MVDates(MetadataValue):
             if not isinstance(v, (tuple, list)):
                 raise ValueError(seq_err)
             for part in v:
-                if not isinstance(part, basestring):
+                if not isinstance(part, str):
                     raise ValueError(seq_err)
             if len(v) != 2:
                 raise ValueError(seq_err)
@@ -354,8 +353,8 @@ class MVResourceType(MetadataValue):
     mandatory = False
 
     def __init__(self, value):
-        if not isinstance(value, basestring):
-            raise ValueError('resourcetype must be a basestring')
+        if not isinstance(value, str):
+            raise ValueError('resourcetype must be a str')
         parts = value.split('/', 1)
         if len(parts) != 2:
             raise ValueError('resourcetype must have the form resourceTypeGeneral/resourceType')
@@ -401,7 +400,7 @@ class MVAlternateIdentifiers(MetadataValue):
             if not isinstance(v, (tuple, list)):
                 raise ValueError(seq_err)
             for part in v:
-                if not isinstance(part, basestring):
+                if not isinstance(part, str):
                     raise ValueError(seq_err)
             if len(v) != 2:
                 raise ValueError(seq_err)
@@ -451,7 +450,7 @@ class MVRelatedIdentifiers(MetadataValue):
             if len(v) != 3:
                 raise ValueError('relatedidentifiers elements must be 3-tuples')
             for el in v:
-                if not isinstance(el, basestring):
+                if not isinstance(el, str):
                     msg = 'relatedidentifiers elements must be strings'
                     raise ValueError(msg)
             if v[1] not in relatedidentifiertype_values:
@@ -521,14 +520,14 @@ class MVRights(MetadataValue):
         self.value = []
         seq_err = 'rights elements must be strings or 2-tuples of strings'
         for v in value:
-            if isinstance(v, basestring):
+            if isinstance(v, str):
                 self.value.append((v, None))
             elif isinstance(v, (tuple, list)):
                 if len(v) != 2:
                     raise ValueError(seq_err)
-                if not isinstance(v[0], basestring):
+                if not isinstance(v[0], str):
                     raise ValueError(seq_err)
-                if not isinstance(v[1], (types.NoneType, basestring)):
+                if not isinstance(v[1], (type(None), str)):
                     raise ValueError(seq_err)
                 self.value.append(tuple(v))
             else:
@@ -581,7 +580,7 @@ class MVDescriptions(MetadataValue):
             if not isinstance(v, (tuple, list)):
                 raise ValueError(seq_err)
             for part in v:
-                if not isinstance(part, basestring):
+                if not isinstance(part, str):
                     raise ValueError(seq_err)
             if len(v) != 2:
                 raise ValueError(seq_err)
@@ -624,7 +623,7 @@ class MVGeoLocations(MetadataValue):
             raise ValueError('geolocations must be a list or a tuple')
         self.value = []
         for v in value:
-            if not isinstance(v, basestring):
+            if not isinstance(v, str):
                 raise ValueError('geolocations values must be strings')
             self.value.append(v)
         return
